@@ -226,6 +226,13 @@ class Handler(userBasicHelper, JSONRPCHandler):
         raise gen.Return(result)
 
     @tornadorpc.coroutine
+    def relay_set_all(self, values):
+        for circuit in range(1,8):
+            relay = Devices.by_int(RELAY, str(circuit))
+            result = yield relay.set_state(int(values[circuit-1]))
+        raise gen.Return(result)
+
+    @tornadorpc.coroutine
     def relay_set_for_time(self, circuit, value, timeout):
         relay = Devices.by_int(RELAY, str(circuit))
         if timeout <= 0:
